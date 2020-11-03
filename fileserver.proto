@@ -1,0 +1,25 @@
+service FileServer {
+
+    // Authenticate with new Machine
+    rpc Authenticate (AuthRequest) returns (AuthResponse) {};
+
+    // Take a command, execute it and return the results
+    rpc TakeCommand (CommandRequest) returns (CommandResponse) {};
+
+}
+
+message AuthRequest {
+    
+}
+
+message AuthResponse {
+    
+}
+
+message CommandRequest {
+
+}
+
+message CommandResponse {
+    
+}

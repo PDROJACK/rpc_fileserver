@@ -1,0 +1,52 @@
+syntax="proto3";
+
+service Connect {
+
+    // Gives unique keys to servers or terminals trying to connect
+    rpc ConnectNew(Info) returns (Creds) {}
+
+    // Authenticate with KDS 
+    rpc Authenticate (AuthRequestEncrypted) returns (AuthResponse) {};
+
+    // Get connected servers info
+    rpc GetServerInfo (InfoRequest) returns (InfoResponse) {};
+}
+
+message Info {
+    string type = 1; // 'fs' , 'ds'
+    string port = 2; // Port in case of file server
+}
+
+message Creds {
+    string key = 1; // secret key
+    int32 id = 2; // id of client
+}
+
+message AuthRequestEncrypted {
+    string message = 1; // Encrypted message by senders ID
+}
+
+message AuthRequestDecrypted {
+    string myKey = 1; // send credentials of client
+    int32 myId = 2; // ID of A
+    int32 targetId = 3; // ID of B
+    int32 nonce = 4; // Number only used once
+}
+
+message AuthResponse {
+    string message = 1; // Message encrypted by Ks
+}
+
+message InfoRequest {
+    // empty request
+}
+
+message FileServerEntry {
+    int32 id = 1;
+    string port = 2;
+}
+
+message InfoResponse {
+    repeated FileServerEntry file_servers = 1;
+}
+
