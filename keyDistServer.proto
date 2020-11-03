@@ -20,6 +20,7 @@ message Info {
 message Creds {
     string key = 1; // secret key
     int32 id = 2; // id of client
+    string port = 3; // port of file server in case Distributed Machine trying to connect
 }
 
 message AuthRequestEncrypted {

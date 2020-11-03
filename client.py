@@ -8,32 +8,40 @@ import click
 
 import utils
 
-# HOST = '127.0.0.1'
-# PORT = 65432
+class Client():
 
-# with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-#     s.connect((HOST, PORT))
-#     s.sendall(b'data')
-#     data = s.recv(1024)
+    def __init__(self, host = 'localhost', port = '50051')
+        self.host = host
+        self.port = port
+        self.kdcStub = None
+        self.availableServers = {}
 
-# print('Received', repr(data))
+        connectToServer()
 
-@click.command()
-@click.option("--port", help="Port number")
-@click.option("--kind", help="fs: file server or ds: distributed machine")
-def start_client(port, kind):
-    connection_url = 'localhost:' + port
-    channel = grpc.insecure_channel(connection_url)
-    stub = keyDistServer_pb2_grpc.ConnectStub(channel)
-    k = keyDistServer_pb2.Info(type=kind)
-    skey = stub.ConnectNew(k)
+    def connectToServer(self):
+        connection_url = self.host +':'+ self.port
+        channel        = grpc.insecure_channel(connection_url)
+        self.kdcStub   = keyDistServer_pb2_grpc.ConnectStub(channel)
+        k              = keyDistServer_pb2.Info(type='ds')
+        skey           = self.kdcStub.ConnectNew(k)
 
-    with open("pass.key", "wb") as key_file:
-        key_file.write(str.encode(skey.key))
-    
-    with open("id.txt", "wb") as id_file:
-        id_file.write(str.encode(str(skey.id)))
+        with open("pass.key", "wb") as key_file:
+            key_file.write(str.encode(skey.key))
+        
+        with open("id.txt", "wb") as id_file:
+            id_file.write(str.encode(str(skey.id)))
 
+        #TODO: Implement file server information retrieval 
+        self.kdcStub
+        
+        print('Connected successfully...')
+
+    #TODO: Start auth to get nonce and shared key
+    def authenticate(self):
+        pass
+
+    #TODO: Implement the command execution on console side
+    def commands(self):
+        pass
 
 if __name__ == "__main__":
-    start_client()

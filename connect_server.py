@@ -42,11 +42,13 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
             print(self.distMachines)
             return creds
 
+    #TODO: Start Authentication from console to Kdc to server cycle
     def Authenticate(self, request, context):
         # crypt.
         # request.message 
         pass
     
+    #TODO: Implement iterator style data transfer
     def GetServerInfo(self, request, context):
 
         pass
