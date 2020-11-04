@@ -7,7 +7,7 @@ import keyDistServer_pb2_grpc
 
 from simplecrypt import encrypt, decrypt
 
-from utils import id_generator
+from utils import id_generator, dictToJSON
 
 def get_Creds(id):
     return keyDistServer_pb2.Creds(key=id_generator(),id=id)
@@ -16,10 +16,10 @@ def get_Creds(id):
 class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
 
     def __init__(self):
-        self.totalFileServers = 0
-        self.totalDistMachines = 0
-        self.fileServers = {}
-        self.distMachines = {}
+        self.totalFileServers   = 0
+        self.totalDistMachines  = 0
+        self.fileServers        = {}
+        self.distMachines       = {}
 
     def ConnectNew(self, request, context):
         
@@ -28,18 +28,15 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
             print("Sending key and ID...")
             self.totalFileServers+=1
             creds = get_Creds(self.totalFileServers)
-            self.fileServers[self.totalFileServers] = creds.key
-            print(self.fileServers)
+            self.fileServers[self.totalFileServers] = (creds.key, request.url)
+            #print(self.fileServers)
             return creds
         else:
             print("New machine connected ...")
             print("Sending key and ID...")
             self.totalDistMachines+=1
-            
             creds = get_Creds(self.totalDistMachines)
-
             self.distMachines[self.totalDistMachines] = creds.key
-            print(self.distMachines)
             return creds
 
     #TODO: Start Authentication from console to Kdc to server cycle
@@ -48,10 +45,15 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
         # request.message 
         pass
     
-    #TODO: Implement iterator style data transfer
     def GetServerInfo(self, request, context):
+        
+        res = {}
+        for key, value in self.fileServers.items():
+            res[key] = value[1]
 
-        pass
+        info = dictToJSON(res)
+        res = keyDistServer_pb2.InfoResponse(file_servers = info)
+        return res
 
         
 

@@ -14,13 +14,13 @@ service Connect {
 
 message Info {
     string type = 1; // 'fs' , 'ds'
-    string port = 2; // Port in case of file server
+    string url = 2; // Url in case of file server
 }
 
 message Creds {
     string key = 1; // secret key
     int32 id = 2; // id of client
-    string port = 3; // port of file server in case Distributed Machine trying to connect
+    string url = 3; // url of file server in case Distributed Machine trying to connect
 }
 
 message AuthRequestEncrypted {
@@ -48,6 +48,6 @@ message FileServerEntry {
 }
 
 message InfoResponse {
-    repeated FileServerEntry file_servers = 1;
+    string file_servers = 1;
 }
 
