@@ -7,7 +7,7 @@ import keyDistServer_pb2_grpc
 
 from simplecrypt import encrypt, decrypt
 
-from utils import id_generator, dictToJSON
+from utils import id_generator, dictToJSON, JsonToDict
 
 def get_Creds(id):
     return keyDistServer_pb2.Creds(key=id_generator(),id=id)
@@ -37,16 +37,31 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
             self.totalDistMachines+=1
             creds = get_Creds(self.totalDistMachines)
             self.distMachines[self.totalDistMachines] = creds.key
+            print(self.distMachines)
             return creds
 
     #TODO: Start Authentication from console to Kdc to server cycle
     def Authenticate(self, request, context):
-        # crypt.
-        # request.message 
-        pass
+
+        print('Receiving encrypted transmission...')
+
+        idA = int(request.id)
+
+        print('Deciphering encrypted transmission...')
+        print(self.distMachines)
+        decrypted = JsonToDict(decrypt(self.distMachines[idA] , request.message ))
+        idB = decrypted[1]
+        nonce = decrypted[2]
+        ks = id_generator()
+
+        ticket = encrypt( self.fileServers[idB][0] , dictToJSON([idA, ks]))
+        message = encrypt( self.distMachines[idA] , dictToJSON([ks, idA, idB, nonce, ticket.decode('latin-1')]))
+
+        print('Sending new encrypted transmission back...')
+
+        return keyDistServer_pb2.AuthResponse(message = message)
     
     def GetServerInfo(self, request, context):
-        
         res = {}
         for key, value in self.fileServers.items():
             res[key] = value[1]

@@ -24,7 +24,8 @@ message Creds {
 }
 
 message AuthRequestEncrypted {
-    string message = 1; // Encrypted message by senders ID
+    int32 id = 1;
+    bytes message = 2; // Encrypted message by senders ID
 }
 
 message AuthRequestDecrypted {
@@ -35,7 +36,7 @@ message AuthRequestDecrypted {
 }
 
 message AuthResponse {
-    string message = 1; // Message encrypted by Ks
+    bytes message = 1; // Message encrypted by Ks
 }
 
 message InfoRequest {
