@@ -15,11 +15,11 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='keyDistServer.proto',
-  package='',
+  package='keydistserver',
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13keyDistServer.proto\"!\n\x04Info\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0b\n\x03url\x18\x02 \x01(\t\"-\n\x05\x43reds\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0b\n\x03url\x18\x03 \x01(\t\"3\n\x14\x41uthRequestEncrypted\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\x0c\"T\n\x14\x41uthRequestDecrypted\x12\r\n\x05myKey\x18\x01 \x01(\t\x12\x0c\n\x04myId\x18\x02 \x01(\x05\x12\x10\n\x08targetId\x18\x03 \x01(\x05\x12\r\n\x05nonce\x18\x04 \x01(\x05\"\x1f\n\x0c\x41uthResponse\x12\x0f\n\x07message\x18\x01 \x01(\x0c\"\r\n\x0bInfoRequest\"+\n\x0f\x46ileServerEntry\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\t\"$\n\x0cInfoResponse\x12\x14\n\x0c\x66ile_servers\x18\x01 \x01(\t2\x90\x01\n\x07\x43onnect\x12\x1d\n\nConnectNew\x12\x05.Info\x1a\x06.Creds\"\x00\x12\x36\n\x0c\x41uthenticate\x12\x15.AuthRequestEncrypted\x1a\r.AuthResponse\"\x00\x12.\n\rGetServerInfo\x12\x0c.InfoRequest\x1a\r.InfoResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x13keyDistServer.proto\x12\rkeydistserver\"!\n\x04Info\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0b\n\x03url\x18\x02 \x01(\t\"-\n\x05\x43reds\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0b\n\x03url\x18\x03 \x01(\t\"3\n\x14\x41uthRequestEncrypted\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\x0c\"T\n\x14\x41uthRequestDecrypted\x12\r\n\x05myKey\x18\x01 \x01(\t\x12\x0c\n\x04myId\x18\x02 \x01(\x05\x12\x10\n\x08targetId\x18\x03 \x01(\x05\x12\r\n\x05nonce\x18\x04 \x01(\x05\"/\n\x0c\x41uthResponse\x12\x0f\n\x07message\x18\x01 \x01(\x0c\x12\x0e\n\x06status\x18\x02 \x01(\x05\"\r\n\x0bInfoRequest\"+\n\x0f\x46ileServerEntry\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\t\"$\n\x0cInfoResponse\x12\x14\n\x0c\x66ile_servers\x18\x01 \x01(\t2\xe4\x01\n\x07\x43onnect\x12\x39\n\nConnectNew\x12\x13.keydistserver.Info\x1a\x14.keydistserver.Creds\"\x00\x12R\n\x0c\x41uthenticate\x12#.keydistserver.AuthRequestEncrypted\x1a\x1b.keydistserver.AuthResponse\"\x00\x12J\n\rGetServerInfo\x12\x1a.keydistserver.InfoRequest\x1a\x1b.keydistserver.InfoResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -27,21 +27,21 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _INFO = _descriptor.Descriptor(
   name='Info',
-  full_name='Info',
+  full_name='keydistserver.Info',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='type', full_name='Info.type', index=0,
+      name='type', full_name='keydistserver.Info.type', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='url', full_name='Info.url', index=1,
+      name='url', full_name='keydistserver.Info.url', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -59,35 +59,35 @@ _INFO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=23,
-  serialized_end=56,
+  serialized_start=38,
+  serialized_end=71,
 )
 
 
 _CREDS = _descriptor.Descriptor(
   name='Creds',
-  full_name='Creds',
+  full_name='keydistserver.Creds',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='Creds.key', index=0,
+      name='key', full_name='keydistserver.Creds.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='id', full_name='Creds.id', index=1,
+      name='id', full_name='keydistserver.Creds.id', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='url', full_name='Creds.url', index=2,
+      name='url', full_name='keydistserver.Creds.url', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -105,28 +105,28 @@ _CREDS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=58,
-  serialized_end=103,
+  serialized_start=73,
+  serialized_end=118,
 )
 
 
 _AUTHREQUESTENCRYPTED = _descriptor.Descriptor(
   name='AuthRequestEncrypted',
-  full_name='AuthRequestEncrypted',
+  full_name='keydistserver.AuthRequestEncrypted',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='AuthRequestEncrypted.id', index=0,
+      name='id', full_name='keydistserver.AuthRequestEncrypted.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='message', full_name='AuthRequestEncrypted.message', index=1,
+      name='message', full_name='keydistserver.AuthRequestEncrypted.message', index=1,
       number=2, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=b"",
       message_type=None, enum_type=None, containing_type=None,
@@ -144,42 +144,42 @@ _AUTHREQUESTENCRYPTED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=105,
-  serialized_end=156,
+  serialized_start=120,
+  serialized_end=171,
 )
 
 
 _AUTHREQUESTDECRYPTED = _descriptor.Descriptor(
   name='AuthRequestDecrypted',
-  full_name='AuthRequestDecrypted',
+  full_name='keydistserver.AuthRequestDecrypted',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='myKey', full_name='AuthRequestDecrypted.myKey', index=0,
+      name='myKey', full_name='keydistserver.AuthRequestDecrypted.myKey', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='myId', full_name='AuthRequestDecrypted.myId', index=1,
+      name='myId', full_name='keydistserver.AuthRequestDecrypted.myId', index=1,
       number=2, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='targetId', full_name='AuthRequestDecrypted.targetId', index=2,
+      name='targetId', full_name='keydistserver.AuthRequestDecrypted.targetId', index=2,
       number=3, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='nonce', full_name='AuthRequestDecrypted.nonce', index=3,
+      name='nonce', full_name='keydistserver.AuthRequestDecrypted.nonce', index=3,
       number=4, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -197,23 +197,30 @@ _AUTHREQUESTDECRYPTED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=158,
-  serialized_end=242,
+  serialized_start=173,
+  serialized_end=257,
 )
 
 
 _AUTHRESPONSE = _descriptor.Descriptor(
   name='AuthResponse',
-  full_name='AuthResponse',
+  full_name='keydistserver.AuthResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='message', full_name='AuthResponse.message', index=0,
+      name='message', full_name='keydistserver.AuthResponse.message', index=0,
       number=1, type=12, cpp_type=9, label=1,
       has_default_value=False, default_value=b"",
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='status', full_name='keydistserver.AuthResponse.status', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
@@ -229,14 +236,14 @@ _AUTHRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=244,
-  serialized_end=275,
+  serialized_start=259,
+  serialized_end=306,
 )
 
 
 _INFOREQUEST = _descriptor.Descriptor(
   name='InfoRequest',
-  full_name='InfoRequest',
+  full_name='keydistserver.InfoRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
@@ -254,28 +261,28 @@ _INFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=277,
-  serialized_end=290,
+  serialized_start=308,
+  serialized_end=321,
 )
 
 
 _FILESERVERENTRY = _descriptor.Descriptor(
   name='FileServerEntry',
-  full_name='FileServerEntry',
+  full_name='keydistserver.FileServerEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='FileServerEntry.id', index=0,
+      name='id', full_name='keydistserver.FileServerEntry.id', index=0,
       number=1, type=5, cpp_type=1, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='port', full_name='FileServerEntry.port', index=1,
+      name='port', full_name='keydistserver.FileServerEntry.port', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -293,21 +300,21 @@ _FILESERVERENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=292,
-  serialized_end=335,
+  serialized_start=323,
+  serialized_end=366,
 )
 
 
 _INFORESPONSE = _descriptor.Descriptor(
   name='InfoResponse',
-  full_name='InfoResponse',
+  full_name='keydistserver.InfoResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   create_key=_descriptor._internal_create_key,
   fields=[
     _descriptor.FieldDescriptor(
-      name='file_servers', full_name='InfoResponse.file_servers', index=0,
+      name='file_servers', full_name='keydistserver.InfoResponse.file_servers', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=b"".decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -325,8 +332,8 @@ _INFORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=337,
-  serialized_end=373,
+  serialized_start=368,
+  serialized_end=404,
 )
 
 DESCRIPTOR.message_types_by_name['Info'] = _INFO
@@ -342,56 +349,56 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 Info = _reflection.GeneratedProtocolMessageType('Info', (_message.Message,), {
   'DESCRIPTOR' : _INFO,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:Info)
+  # @@protoc_insertion_point(class_scope:keydistserver.Info)
   })
 _sym_db.RegisterMessage(Info)
 
 Creds = _reflection.GeneratedProtocolMessageType('Creds', (_message.Message,), {
   'DESCRIPTOR' : _CREDS,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:Creds)
+  # @@protoc_insertion_point(class_scope:keydistserver.Creds)
   })
 _sym_db.RegisterMessage(Creds)
 
 AuthRequestEncrypted = _reflection.GeneratedProtocolMessageType('AuthRequestEncrypted', (_message.Message,), {
   'DESCRIPTOR' : _AUTHREQUESTENCRYPTED,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:AuthRequestEncrypted)
+  # @@protoc_insertion_point(class_scope:keydistserver.AuthRequestEncrypted)
   })
 _sym_db.RegisterMessage(AuthRequestEncrypted)
 
 AuthRequestDecrypted = _reflection.GeneratedProtocolMessageType('AuthRequestDecrypted', (_message.Message,), {
   'DESCRIPTOR' : _AUTHREQUESTDECRYPTED,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:AuthRequestDecrypted)
+  # @@protoc_insertion_point(class_scope:keydistserver.AuthRequestDecrypted)
   })
 _sym_db.RegisterMessage(AuthRequestDecrypted)
 
 AuthResponse = _reflection.GeneratedProtocolMessageType('AuthResponse', (_message.Message,), {
   'DESCRIPTOR' : _AUTHRESPONSE,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:AuthResponse)
+  # @@protoc_insertion_point(class_scope:keydistserver.AuthResponse)
   })
 _sym_db.RegisterMessage(AuthResponse)
 
 InfoRequest = _reflection.GeneratedProtocolMessageType('InfoRequest', (_message.Message,), {
   'DESCRIPTOR' : _INFOREQUEST,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:InfoRequest)
+  # @@protoc_insertion_point(class_scope:keydistserver.InfoRequest)
   })
 _sym_db.RegisterMessage(InfoRequest)
 
 FileServerEntry = _reflection.GeneratedProtocolMessageType('FileServerEntry', (_message.Message,), {
   'DESCRIPTOR' : _FILESERVERENTRY,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:FileServerEntry)
+  # @@protoc_insertion_point(class_scope:keydistserver.FileServerEntry)
   })
 _sym_db.RegisterMessage(FileServerEntry)
 
 InfoResponse = _reflection.GeneratedProtocolMessageType('InfoResponse', (_message.Message,), {
   'DESCRIPTOR' : _INFORESPONSE,
   '__module__' : 'keyDistServer_pb2'
-  # @@protoc_insertion_point(class_scope:InfoResponse)
+  # @@protoc_insertion_point(class_scope:keydistserver.InfoResponse)
   })
 _sym_db.RegisterMessage(InfoResponse)
 
@@ -399,17 +406,17 @@ _sym_db.RegisterMessage(InfoResponse)
 
 _CONNECT = _descriptor.ServiceDescriptor(
   name='Connect',
-  full_name='Connect',
+  full_name='keydistserver.Connect',
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=376,
-  serialized_end=520,
+  serialized_start=407,
+  serialized_end=635,
   methods=[
   _descriptor.MethodDescriptor(
     name='ConnectNew',
-    full_name='Connect.ConnectNew',
+    full_name='keydistserver.Connect.ConnectNew',
     index=0,
     containing_service=None,
     input_type=_INFO,
@@ -419,7 +426,7 @@ _CONNECT = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='Authenticate',
-    full_name='Connect.Authenticate',
+    full_name='keydistserver.Connect.Authenticate',
     index=1,
     containing_service=None,
     input_type=_AUTHREQUESTENCRYPTED,
@@ -429,7 +436,7 @@ _CONNECT = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='GetServerInfo',
-    full_name='Connect.GetServerInfo',
+    full_name='keydistserver.Connect.GetServerInfo',
     index=2,
     containing_service=None,
     input_type=_INFOREQUEST,

@@ -1,5 +1,7 @@
 syntax="proto3";
 
+package keydistserver;
+
 service Connect {
 
     // Gives unique keys to servers or terminals trying to connect
@@ -37,6 +39,7 @@ message AuthRequestDecrypted {
 
 message AuthResponse {
     bytes message = 1; // Message encrypted by Ks
+    int32 status = 2;
 }
 
 message InfoRequest {

@@ -1,7 +1,14 @@
+syntax="proto3";
+
+import "keyDistServer.proto";
+
 service FileServer {
 
     // Authenticate with new Machine
-    rpc Authenticate (AuthRequest) returns (AuthResponse) {};
+    rpc Authenticate (AuthRequest) returns (keydistserver.AuthResponse) {};
+
+    // Complete authentication final request
+    rpc AutheticationComplete(AuthRequest) returns (keydistserver.AuthResponse) {};
 
     // Take a command, execute it and return the results
     rpc TakeCommand (CommandRequest) returns (CommandResponse) {};
@@ -9,11 +16,8 @@ service FileServer {
 }
 
 message AuthRequest {
-    
-}
-
-message AuthResponse {
-    
+    bytes message = 1; // Encrypted message
+    int32 id = 2;
 }
 
 message CommandRequest {

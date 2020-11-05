@@ -5,6 +5,9 @@ import grpc
 import keyDistServer_pb2
 import keyDistServer_pb2_grpc
 
+import fileserver_pb2
+import fileserver_pb2_grpc
+
 import click
 
 from utils import JsonToDict, dictToJSON
@@ -20,7 +23,7 @@ class Client():
 
         self.connectToServer()
 
-        self.authenticate(1)
+        self.authenticate(14)
 
     def connectToServer(self):
         connection_url = self.host +':'+ self.port
@@ -53,12 +56,28 @@ class Client():
         res = self.kdcStub.Authenticate(keyDistServer_pb2.AuthRequestEncrypted(id=self.myId, message=message))
         
         print('PHASE I completed, Received encryted message from KDC...')
+        #print(JsonToDict(decrypt(self.myKey, res.message)))
         ks, idA, idB, nonce, messageToB = JsonToDict(decrypt(self.myKey, res.message))
+        # print(type(messageToB.encode('latin-1')))
 
+        print(self.availableServers)
         #TODO: Implement ticket to Fileserver rpc method here 
-        
-        print('Commencing PHASE II sending message to selected  file server...')
+        print('Commencing PHASE II sending message to selected file server...')
+        channel        = grpc.insecure_channel(self.availableServers[str(idB)])
+        stub           = fileserver_pb2_grpc.FileServerStub(channel)
 
+        encryptedII = stub.Authenticate(fileserver_pb2.AuthRequest(message=messageToB.encode('latin-1'))).message
+        nonceII = int(decrypt(ks, encryptedII)) + 1
+
+        print('Commencing PHASE II sending nonce to selected file server...')
+        finalMessage = encrypt(ks, str(nonceII))
+        res = stub.AutheticationComplete(fileserver_pb2.AuthRequest(id=self.myId,message = finalMessage))
+        if res.status == 200:
+            print('Authentication with file server {} completed successfully'.format(idB))
+        else:
+            print('Authentication with file server {} failed...'.format(idB))
+
+            #TODO: Revert back the changes in file servers
 
 
     #TODO: Implement the command execution on console side

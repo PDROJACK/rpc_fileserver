@@ -22,7 +22,7 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
         self.distMachines       = {}
 
     def ConnectNew(self, request, context):
-        
+        print(context)
         if request.type == 'fs':
             print("New file server connected ...")
             print("Sending key and ID...")
@@ -69,8 +69,6 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
         info = dictToJSON(res)
         res = keyDistServer_pb2.InfoResponse(file_servers = info)
         return res
-
-        
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))

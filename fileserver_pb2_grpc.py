@@ -2,10 +2,11 @@
 """Client and server classes corresponding to protobuf-defined services."""
 import grpc
 
+import fileserver_pb2 as fileserver__pb2
 import keyDistServer_pb2 as keyDistServer__pb2
 
 
-class ConnectStub(object):
+class FileServerStub(object):
     """Missing associated documentation comment in .proto file."""
 
     def __init__(self, channel):
@@ -14,91 +15,74 @@ class ConnectStub(object):
         Args:
             channel: A grpc.Channel.
         """
-        self.ConnectNew = channel.unary_unary(
-                '/keydistserver.Connect/ConnectNew',
-                request_serializer=keyDistServer__pb2.Info.SerializeToString,
-                response_deserializer=keyDistServer__pb2.Creds.FromString,
-                )
         self.Authenticate = channel.unary_unary(
-                '/keydistserver.Connect/Authenticate',
-                request_serializer=keyDistServer__pb2.AuthRequestEncrypted.SerializeToString,
+                '/FileServer/Authenticate',
+                request_serializer=fileserver__pb2.AuthRequest.SerializeToString,
                 response_deserializer=keyDistServer__pb2.AuthResponse.FromString,
                 )
-        self.GetServerInfo = channel.unary_unary(
-                '/keydistserver.Connect/GetServerInfo',
-                request_serializer=keyDistServer__pb2.InfoRequest.SerializeToString,
-                response_deserializer=keyDistServer__pb2.InfoResponse.FromString,
+        self.AutheticationComplete = channel.unary_unary(
+                '/FileServer/AutheticationComplete',
+                request_serializer=fileserver__pb2.AuthRequest.SerializeToString,
+                response_deserializer=keyDistServer__pb2.AuthResponse.FromString,
+                )
+        self.TakeCommand = channel.unary_unary(
+                '/FileServer/TakeCommand',
+                request_serializer=fileserver__pb2.CommandRequest.SerializeToString,
+                response_deserializer=fileserver__pb2.CommandResponse.FromString,
                 )
 
 
-class ConnectServicer(object):
+class FileServerServicer(object):
     """Missing associated documentation comment in .proto file."""
 
-    def ConnectNew(self, request, context):
-        """Gives unique keys to servers or terminals trying to connect
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
-
     def Authenticate(self, request, context):
-        """Authenticate with KDS 
+        """Authenticate with new Machine
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
-    def GetServerInfo(self, request, context):
-        """Get connected servers info
+    def AutheticationComplete(self, request, context):
+        """Complete authentication final request
+        """
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def TakeCommand(self, request, context):
+        """Take a command, execute it and return the results
         """
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
 
-def add_ConnectServicer_to_server(servicer, server):
+def add_FileServerServicer_to_server(servicer, server):
     rpc_method_handlers = {
-            'ConnectNew': grpc.unary_unary_rpc_method_handler(
-                    servicer.ConnectNew,
-                    request_deserializer=keyDistServer__pb2.Info.FromString,
-                    response_serializer=keyDistServer__pb2.Creds.SerializeToString,
-            ),
             'Authenticate': grpc.unary_unary_rpc_method_handler(
                     servicer.Authenticate,
-                    request_deserializer=keyDistServer__pb2.AuthRequestEncrypted.FromString,
+                    request_deserializer=fileserver__pb2.AuthRequest.FromString,
                     response_serializer=keyDistServer__pb2.AuthResponse.SerializeToString,
             ),
-            'GetServerInfo': grpc.unary_unary_rpc_method_handler(
-                    servicer.GetServerInfo,
-                    request_deserializer=keyDistServer__pb2.InfoRequest.FromString,
-                    response_serializer=keyDistServer__pb2.InfoResponse.SerializeToString,
+            'AutheticationComplete': grpc.unary_unary_rpc_method_handler(
+                    servicer.AutheticationComplete,
+                    request_deserializer=fileserver__pb2.AuthRequest.FromString,
+                    response_serializer=keyDistServer__pb2.AuthResponse.SerializeToString,
+            ),
+            'TakeCommand': grpc.unary_unary_rpc_method_handler(
+                    servicer.TakeCommand,
+                    request_deserializer=fileserver__pb2.CommandRequest.FromString,
+                    response_serializer=fileserver__pb2.CommandResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'keydistserver.Connect', rpc_method_handlers)
+            'FileServer', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
  # This class is part of an EXPERIMENTAL API.
-class Connect(object):
+class FileServer(object):
     """Missing associated documentation comment in .proto file."""
-
-    @staticmethod
-    def ConnectNew(request,
-            target,
-            options=(),
-            channel_credentials=None,
-            call_credentials=None,
-            insecure=False,
-            compression=None,
-            wait_for_ready=None,
-            timeout=None,
-            metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/keydistserver.Connect/ConnectNew',
-            keyDistServer__pb2.Info.SerializeToString,
-            keyDistServer__pb2.Creds.FromString,
-            options, channel_credentials,
-            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
     def Authenticate(request,
@@ -111,14 +95,14 @@ class Connect(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/keydistserver.Connect/Authenticate',
-            keyDistServer__pb2.AuthRequestEncrypted.SerializeToString,
+        return grpc.experimental.unary_unary(request, target, '/FileServer/Authenticate',
+            fileserver__pb2.AuthRequest.SerializeToString,
             keyDistServer__pb2.AuthResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
 
     @staticmethod
-    def GetServerInfo(request,
+    def AutheticationComplete(request,
             target,
             options=(),
             channel_credentials=None,
@@ -128,8 +112,25 @@ class Connect(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/keydistserver.Connect/GetServerInfo',
-            keyDistServer__pb2.InfoRequest.SerializeToString,
-            keyDistServer__pb2.InfoResponse.FromString,
+        return grpc.experimental.unary_unary(request, target, '/FileServer/AutheticationComplete',
+            fileserver__pb2.AuthRequest.SerializeToString,
+            keyDistServer__pb2.AuthResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def TakeCommand(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/FileServer/TakeCommand',
+            fileserver__pb2.CommandRequest.SerializeToString,
+            fileserver__pb2.CommandResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
