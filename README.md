@@ -13,7 +13,7 @@ pip install -r requirements.txt
 2. Then we have to compile the .proto files, run these commands:
 ```
 python -m grpc_tools.protoc -I./ --python_out=. --grpc_python_out=. ./keyDistServer.proto
-python -m grpc_tools.protoc -I./ --python_out=. --grpc_python_out=. ./keyDistServer.proto
+python -m grpc_tools.protoc -I./ --python_out=. --grpc_python_out=. ./fileserver.proto
 ```
 3. Now we can start the key distribution server, by default on port=51001:
 ```
