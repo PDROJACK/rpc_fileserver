@@ -17,6 +17,7 @@ service Connect {
 message Info {
     string type = 1; // 'fs' , 'ds'
     string url = 2; // Url in case of file server
+    string id = 3; // in case client is already registered
 }
 
 message Creds {

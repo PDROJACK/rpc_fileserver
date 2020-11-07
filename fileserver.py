@@ -90,6 +90,7 @@ def serve(port, kport):
     )
     server.add_insecure_port(my_url)
     server.start()
+    print('File server running on port {}'.format(port))
     server.wait_for_termination()
 
 if __name__ == "__main__":

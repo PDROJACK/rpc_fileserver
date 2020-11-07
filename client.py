@@ -1,89 +1,149 @@
 import socket
 import random
-from simplecrypt import encrypt, decrypt
+import click
 import grpc
+import pickle
+import os
+
 import keyDistServer_pb2
 import keyDistServer_pb2_grpc
 
 import fileserver_pb2
 import fileserver_pb2_grpc
 
-import click
-
+from simplecrypt import encrypt, decrypt
+from configparser import SafeConfigParser,ConfigParser
 from utils import JsonToDict, dictToJSON
 
-class Client():
+config = ConfigParser()
 
-    def __init__(self, host = 'localhost', port = '50051'):
-        self.host               = host
-        self.port               = port
+
+class Client(object):
+
+    def __init__(self):
+        self.host               = None
+        self.port               = None
         self.kdcStub            = None
         self.myKey              = None
+        self.myId               = None
         self.availableServers   = {}
 
-        self.connectToServer()
-
-        self.authenticate(14)
-
-    def connectToServer(self):
-        connection_url = self.host +':'+ self.port
-        channel        = grpc.insecure_channel(connection_url)
-        self.kdcStub   = keyDistServer_pb2_grpc.ConnectStub(channel)
-        k              = keyDistServer_pb2.Info(type='ds')
-        skey           = self.kdcStub.ConnectNew(k)
-        self.myKey     = skey.key
-        self.myId      = skey.id
-
-        with open("pass.key", "wb") as key_file:
-            key_file.write(str.encode(skey.key))
-        
-        with open("id.txt", "wb") as id_file:
-            id_file.write(str.encode(str(skey.id)))
-
-        infoReq = keyDistServer_pb2.InfoRequest()
-
-        self.availableServers = JsonToDict(self.kdcStub.GetServerInfo(infoReq).file_servers)
-        
-        print('Connected successfully...')
-
-    ## IdB is parameter
-    def authenticate(self, idB):
-        print('Commencing PHASE I of authentication process...')
-        nonce = random.randrange(1000)
-        message = dictToJSON([self.myId, idB, nonce])
-        message = encrypt(self.myKey, message)
-        #print(message.decode("utf-8"))
-        res = self.kdcStub.Authenticate(keyDistServer_pb2.AuthRequestEncrypted(id=self.myId, message=message))
-        
-        print('PHASE I completed, Received encryted message from KDC...')
-        #print(JsonToDict(decrypt(self.myKey, res.message)))
-        ks, idA, idB, nonce, messageToB = JsonToDict(decrypt(self.myKey, res.message))
-        # print(type(messageToB.encode('latin-1')))
-
-        print(self.availableServers)
-        #TODO: Implement ticket to Fileserver rpc method here 
-        print('Commencing PHASE II sending message to selected file server...')
-        channel        = grpc.insecure_channel(self.availableServers[str(idB)])
-        stub           = fileserver_pb2_grpc.FileServerStub(channel)
-
-        encryptedII = stub.Authenticate(fileserver_pb2.AuthRequest(message=messageToB.encode('latin-1'))).message
-        nonceII = int(decrypt(ks, encryptedII)) + 1
-
-        print('Commencing PHASE II sending nonce to selected file server...')
-        finalMessage = encrypt(ks, str(nonceII))
-        res = stub.AutheticationComplete(fileserver_pb2.AuthRequest(id=self.myId,message = finalMessage))
-        if res.status == 200:
-            print('Authentication with file server {} completed successfully'.format(idB))
-        else:
-            print('Authentication with file server {} failed...'.format(idB))
-
-            #TODO: Revert back the changes in file servers
+pass_client = click.make_pass_decorator(Client, ensure=True)
 
 
-    #TODO: Implement the command execution on console side
-    def commands(self):
-        
+#TODO: Start the client make connection and store information
+@click.group()
+@pass_client
+def cli(client):
+
+    if 'main' not in config.sections():
+        config.add_section('main')
+
+
+    if os.path.isfile('./config.ini') == False:
         pass
+    else:
+        config.read('config.ini')
 
-if __name__ == "__main__":
-    client = Client()
+        client.host               = config['main']['host']
+        client.port               = config['main']['port']
+        client.myKey              = config['main']['myKey']
+        client.myId               = int(config['main']['myId'])
+
+        fileservers = config.sections()
+        for i in range(1, len(fileservers)):
+            client.availableServers[i] = config[str(fileservers[i])]['url']
+
+
+        connection_url = config['main']['host'] + ':' + config['main']['port']
+        channel        = grpc.insecure_channel(connection_url)
+        client.kdcStub = keyDistServer_pb2_grpc.ConnectStub(channel)
+
+
+
+    
+
+#TODO: Create connection with file server
+@cli.command()
+@click.option('--port', help='Port of key distribution server')
+@pass_client
+def getKey(client, port):
+    ''' Connects you with file server or Key distribution server '''
+
+    connection_url = 'localhost:'+ port
+    channel        = grpc.insecure_channel(connection_url)
+    client.kdcStub = keyDistServer_pb2_grpc.ConnectStub(channel)
+
+    k                     = keyDistServer_pb2.Info(type='ds')
+    skey                  = client.kdcStub.ConnectNew(k)
+    client.myKey          = skey.key
+    client.myId           = skey.id
+    
+    config.set('main', 'host', 'localhost')
+    config.set('main', 'port', port)
+    config.set('main', 'myKey', client.myKey)
+    config.set('main', 'myId', str(client.myId))
+    with open('config.ini', 'w') as configfile:    
+        config.write(configfile)
+
+    print('Connected successfully...')
+
+
+#TODO: Create connection with file server
+@cli.command()
+@click.option('--id', help='ID of fileserver')
+@pass_client
+def connect(client, id):
+    ''' Connects you with file server or Key distribution server '''
+
+    print('Commencing PHASE I of authentication process...')
+    nonce   = random.randrange(1000)
+    idB     = id
+    message = dictToJSON([client.myId, idB, nonce])
+    message = encrypt(client.myKey, message)
+    res     = client.kdcStub.Authenticate(keyDistServer_pb2.AuthRequestEncrypted(id=client.myId, message=message))
+    
+    print('PHASE I completed, Received encryted message from KDC...')
+    ks, idA, idB, nonce, messageToB = JsonToDict(decrypt(client.myKey, res.message))
+
+    print('Commencing PHASE II sending message to selected file server...')
+    print(client.availableServers)
+    channel        = grpc.insecure_channel(client.availableServers[(idB)])
+    stub           = fileserver_pb2_grpc.FileServerStub(channel)
+
+    encryptedII    = stub.Authenticate(fileserver_pb2.AuthRequest(message=messageToB.encode('latin-1'))).message
+    nonceII        = int(decrypt(ks, encryptedII)) + 1
+
+    print('Commencing PHASE II sending nonce to selected file server...')
+    finalMessage = encrypt(ks, str(nonceII))
+    res = stub.AutheticationComplete(fileserver_pb2.AuthRequest(id=client.myId,message = finalMessage))
+    if res.status == 200:
+        print('Authentication with file server {} completed successfully'.format(idB))
+    else:
+        print('Authentication with file server {} failed...'.format(idB))
+
+
+#TODO: Upload files in the selected file server
+@cli.command()
+@pass_client
+def commands(client,):
+    ''' Enter allowed commands '''
+    pass
+
+
+@cli.command()
+@pass_client
+def fileservers(client):
+    ''' Get information about all the connected file servers '''
+
+    infoReq = keyDistServer_pb2.InfoRequest()
+    client.availableServers = JsonToDict(client.kdcStub.GetServerInfo(infoReq).file_servers)
+
+    for key, value in client.availableServers.items():
+        if not config.has_section(key):
+            config.add_section(key)
+            config.set(key, 'url', value)
+            with open('config.ini', 'w') as configfile:    
+                config.write(configfile)
+
+    click.echo(client.availableServers)

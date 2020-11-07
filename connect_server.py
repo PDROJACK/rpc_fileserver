@@ -22,7 +22,6 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
         self.distMachines       = {}
 
     def ConnectNew(self, request, context):
-        print(context)
         if request.type == 'fs':
             print("New file server connected ...")
             print("Sending key and ID...")
@@ -50,7 +49,7 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
         print('Deciphering encrypted transmission...')
         print(self.distMachines)
         decrypted = JsonToDict(decrypt(self.distMachines[idA] , request.message ))
-        idB = decrypted[1]
+        idB = int(decrypted[1])
         nonce = decrypted[2]
         ks = id_generator()
 
@@ -76,8 +75,10 @@ def serve():
         KeyDistributionServicer(),
         server
     )
-    server.add_insecure_port('[::]:50051')
+    port = 51001
+    server.add_insecure_port('[::]:{}'.format(port))
     server.start()
+    print('KD server running on port {}'.format(port))
     server.wait_for_termination()
 
 if __name__ == '__main__':

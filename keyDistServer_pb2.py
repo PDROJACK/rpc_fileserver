@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x13keyDistServer.proto\x12\rkeydistserver\"!\n\x04Info\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0b\n\x03url\x18\x02 \x01(\t\"-\n\x05\x43reds\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0b\n\x03url\x18\x03 \x01(\t\"3\n\x14\x41uthRequestEncrypted\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\x0c\"T\n\x14\x41uthRequestDecrypted\x12\r\n\x05myKey\x18\x01 \x01(\t\x12\x0c\n\x04myId\x18\x02 \x01(\x05\x12\x10\n\x08targetId\x18\x03 \x01(\x05\x12\r\n\x05nonce\x18\x04 \x01(\x05\"/\n\x0c\x41uthResponse\x12\x0f\n\x07message\x18\x01 \x01(\x0c\x12\x0e\n\x06status\x18\x02 \x01(\x05\"\r\n\x0bInfoRequest\"+\n\x0f\x46ileServerEntry\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\t\"$\n\x0cInfoResponse\x12\x14\n\x0c\x66ile_servers\x18\x01 \x01(\t2\xe4\x01\n\x07\x43onnect\x12\x39\n\nConnectNew\x12\x13.keydistserver.Info\x1a\x14.keydistserver.Creds\"\x00\x12R\n\x0c\x41uthenticate\x12#.keydistserver.AuthRequestEncrypted\x1a\x1b.keydistserver.AuthResponse\"\x00\x12J\n\rGetServerInfo\x12\x1a.keydistserver.InfoRequest\x1a\x1b.keydistserver.InfoResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x13keyDistServer.proto\x12\rkeydistserver\"-\n\x04Info\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0b\n\x03url\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\t\"-\n\x05\x43reds\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\x05\x12\x0b\n\x03url\x18\x03 \x01(\t\"3\n\x14\x41uthRequestEncrypted\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0f\n\x07message\x18\x02 \x01(\x0c\"T\n\x14\x41uthRequestDecrypted\x12\r\n\x05myKey\x18\x01 \x01(\t\x12\x0c\n\x04myId\x18\x02 \x01(\x05\x12\x10\n\x08targetId\x18\x03 \x01(\x05\x12\r\n\x05nonce\x18\x04 \x01(\x05\"/\n\x0c\x41uthResponse\x12\x0f\n\x07message\x18\x01 \x01(\x0c\x12\x0e\n\x06status\x18\x02 \x01(\x05\"\r\n\x0bInfoRequest\"+\n\x0f\x46ileServerEntry\x12\n\n\x02id\x18\x01 \x01(\x05\x12\x0c\n\x04port\x18\x02 \x01(\t\"$\n\x0cInfoResponse\x12\x14\n\x0c\x66ile_servers\x18\x01 \x01(\t2\xe4\x01\n\x07\x43onnect\x12\x39\n\nConnectNew\x12\x13.keydistserver.Info\x1a\x14.keydistserver.Creds\"\x00\x12R\n\x0c\x41uthenticate\x12#.keydistserver.AuthRequestEncrypted\x1a\x1b.keydistserver.AuthResponse\"\x00\x12J\n\rGetServerInfo\x12\x1a.keydistserver.InfoRequest\x1a\x1b.keydistserver.InfoResponse\"\x00\x62\x06proto3'
 )
 
 
@@ -47,6 +47,13 @@ _INFO = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='id', full_name='keydistserver.Info.id', index=2,
+      number=3, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -60,7 +67,7 @@ _INFO = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=38,
-  serialized_end=71,
+  serialized_end=83,
 )
 
 
@@ -105,8 +112,8 @@ _CREDS = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=73,
-  serialized_end=118,
+  serialized_start=85,
+  serialized_end=130,
 )
 
 
@@ -144,8 +151,8 @@ _AUTHREQUESTENCRYPTED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=120,
-  serialized_end=171,
+  serialized_start=132,
+  serialized_end=183,
 )
 
 
@@ -197,8 +204,8 @@ _AUTHREQUESTDECRYPTED = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=173,
-  serialized_end=257,
+  serialized_start=185,
+  serialized_end=269,
 )
 
 
@@ -236,8 +243,8 @@ _AUTHRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=259,
-  serialized_end=306,
+  serialized_start=271,
+  serialized_end=318,
 )
 
 
@@ -261,8 +268,8 @@ _INFOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=308,
-  serialized_end=321,
+  serialized_start=320,
+  serialized_end=333,
 )
 
 
@@ -300,8 +307,8 @@ _FILESERVERENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=323,
-  serialized_end=366,
+  serialized_start=335,
+  serialized_end=378,
 )
 
 
@@ -332,8 +339,8 @@ _INFORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=368,
-  serialized_end=404,
+  serialized_start=380,
+  serialized_end=416,
 )
 
 DESCRIPTOR.message_types_by_name['Info'] = _INFO
@@ -411,8 +418,8 @@ _CONNECT = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=407,
-  serialized_end=635,
+  serialized_start=419,
+  serialized_end=647,
   methods=[
   _descriptor.MethodDescriptor(
     name='ConnectNew',
