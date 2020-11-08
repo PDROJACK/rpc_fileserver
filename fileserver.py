@@ -7,6 +7,7 @@ from simplecrypt import encrypt, decrypt
 import utils
 import fileserver_pb2
 import fileserver_pb2_grpc
+import subprocess
 
 import keyDistServer_pb2
 import keyDistServer_pb2_grpc
@@ -62,8 +63,12 @@ class FileServerServicer(fileserver_pb2_grpc.FileServerServicer):
 
     #TODO: Implement the server to process commands from console
     def TakeCommand(self, request, response):
-
-        pass
+        
+        command = request.command
+        print(command)
+        if command == 'pwd':
+            
+            return fileserver_pb2.CommandResponse(output = subprocess.check_output('pwd'))
 
 
 @click.command()
@@ -71,7 +76,7 @@ class FileServerServicer(fileserver_pb2_grpc.FileServerServicer):
 @click.option("--port", help="Port to run the fileserver")
 def serve(port, kport):
     connection_url = 'localhost:' + kport
-    my_url = 'localhost:' + port
+    my_url         = 'localhost:' + port
     channel        = grpc.insecure_channel(connection_url)
     stub           = keyDistServer_pb2_grpc.ConnectStub(channel)
     k              = keyDistServer_pb2.Info(type='fs', url=my_url)

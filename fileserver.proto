@@ -21,9 +21,9 @@ message AuthRequest {
 }
 
 message CommandRequest {
-
+    string command = 1;
 }
 
 message CommandResponse {
-    
+    bytes output = 1;
 }

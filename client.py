@@ -15,6 +15,7 @@ from simplecrypt import encrypt, decrypt
 from configparser import SafeConfigParser,ConfigParser
 from utils import JsonToDict, dictToJSON
 
+
 config = ConfigParser()
 
 
@@ -26,15 +27,17 @@ class Client(object):
         self.kdcStub            = None
         self.myKey              = None
         self.myId               = None
+        self.fs_stub            = None
         self.availableServers   = {}
+
 
 pass_client = click.make_pass_decorator(Client, ensure=True)
 
 
-#TODO: Start the client make connection and store information
 @click.group()
+@click.option('--fs', type=int, help='select file server')
 @pass_client
-def cli(client):
+def cli(client, fs):
 
     if 'main' not in config.sections():
         config.add_section('main')
@@ -59,11 +62,12 @@ def cli(client):
         channel        = grpc.insecure_channel(connection_url)
         client.kdcStub = keyDistServer_pb2_grpc.ConnectStub(channel)
 
+        if fs:
+            channel        = grpc.insecure_channel(client.availableServers[fs])
+            client.fs_stub = fileserver_pb2_grpc.FileServerStub(channel)
 
 
-    
 
-#TODO: Create connection with file server
 @cli.command()
 @click.option('--port', help='Port of key distribution server')
 @pass_client
@@ -89,7 +93,6 @@ def getKey(client, port):
     print('Connected successfully...')
 
 
-#TODO: Create connection with file server
 @cli.command()
 @click.option('--id', help='ID of fileserver')
 @pass_client
@@ -123,12 +126,35 @@ def connect(client, id):
         print('Authentication with file server {} failed...'.format(idB))
 
 
-#TODO: Upload files in the selected file server
+@cli.command()
+@click.option('--file', help='Path of file to upload')
+@pass_client
+def upload(client,file):
+    ''' Enter allowed commands '''
+    with open() as f:
+        content = f.read()
+
 @cli.command()
 @pass_client
-def commands(client,):
+def pwd(client):
     ''' Enter allowed commands '''
-    pass
+
+    command = fileserver_pb2.CommandRequest(command="pwd")
+    output = client.fs_stub.TakeCommand(command).output
+    output = output.decode('utf-8')
+    click.echo(output)
+
+@cli.command()
+@pass_client
+def ls(client):
+    ''' Enter allowed commands '''
+
+
+@cli.command()
+@click.option('--file', help='Path of file to print')
+@pass_client
+def cat(client, file):
+    ''' Enter allowed commands '''
 
 
 @cli.command()
