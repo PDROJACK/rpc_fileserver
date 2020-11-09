@@ -3,3 +3,5 @@ future==0.18.2
 grpcio==1.33.2
 grpcio-tools==1.33.2
 simple-crypt==4.1.7
+rich
+alive_progress
