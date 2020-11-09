@@ -147,7 +147,7 @@ def connect(client, id):
 @click.option('--file', help='Path of file to upload')
 @pass_client
 def upload(client,file):
-    ''' Enter allowed commands '''
+    ''' Upload a file to selected file server '''
     with open() as f:
         content = f.read()
 
@@ -155,7 +155,7 @@ def upload(client,file):
 @cli.command()
 @pass_client
 def pwd(client):
-    ''' Enter allowed commands '''
+    ''' Show current directory path '''
 
     command = fileserver_pb2.CommandRequest(command="pwd")
     output = client.fs_stub.TakeCommand(command).output
@@ -165,7 +165,7 @@ def pwd(client):
 @cli.command()
 @pass_client
 def ls(client):
-    ''' Enter allowed commands '''
+    ''' Show contents of directory '''
     
     command = fileserver_pb2.CommandRequest(command="ls")
     output = client.fs_stub.TakeCommand(command).output
@@ -176,7 +176,7 @@ def ls(client):
 @click.option('--file', type=str, help='Path of file to print')
 @pass_client
 def cat(client, file):
-    ''' Enter allowed commands '''
+    ''' Show contents of file '''
     command = 'cat '+file 
     command = fileserver_pb2.CommandRequest(command=command)
     output = client.fs_stub.TakeCommand(command).output
@@ -185,10 +185,10 @@ def cat(client, file):
 
 @cli.command()
 @click.option('--file1', type=str, help='Path of file1 to copy')
-@click.option('--file2', type=str, help='Path of file1 to copy')
+@click.option('--file2', type=str, help='Path of file2')
 @pass_client
 def cp(client, file1, file2):
-    ''' Enter allowed commands '''
+    ''' Copy one file to another '''
     command = 'cp {} {}'.format(file1, file2) 
     command = fileserver_pb2.CommandRequest(command=command)
     output = client.fs_stub.TakeCommand(command).output
