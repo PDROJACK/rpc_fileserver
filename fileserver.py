@@ -64,11 +64,11 @@ class FileServerServicer(fileserver_pb2_grpc.FileServerServicer):
     #TODO: Implement the server to process commands from console
     def TakeCommand(self, request, response):
         
-        command = request.command
-        print(command)
-        if command == 'pwd':
-            
-            return fileserver_pb2.CommandResponse(output = subprocess.check_output('pwd'))
+        command = request.command.split(' ')
+        output = subprocess.check_output(command)
+        return fileserver_pb2.CommandResponse(output = output)
+
+
 
 
 @click.command()
