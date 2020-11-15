@@ -41,10 +41,7 @@ class FileServerServicer(fileserver_pb2_grpc.FileServerServicer):
     def AutheticationComplete(self, request, response):
         try:
 
-            # print(request)
-
             ks, nonce, state = self.connectedTerminals[request.id]
-            #print(self.connectedTerminals[request.id])
             received_nonce = decrypt(ks, request.message)
             received_nonce = int(received_nonce.decode('latin-1'))
             print(received_nonce)
@@ -57,18 +54,34 @@ class FileServerServicer(fileserver_pb2_grpc.FileServerServicer):
                 return keyDistServer_pb2.AuthResponse(status=400)
             
         except:
-            pass
+            return keyDistServer_pb2.AuthResponse(status=500)
             ##TODO: execute rollback
         
 
     #TODO: Implement the server to process commands from console
     def TakeCommand(self, request, response):
-        
-        command = request.command.split(' ')
-        output = subprocess.check_output(command)
-        return fileserver_pb2.CommandResponse(output = output)
 
+        try:
+            if(self.connectedTerminals[request.id][2] == True):
+                command = request.command.split(' ')
+                
+                if command[0] == 'upload':
+                    
+                    filename = command[1].split('/')[1]
+                    with open(filename,'w') as fs:
+                        print(request.data)
+                        fs.write(request.data)
+                        output = b'Done'
 
+                else:    
+                    output = subprocess.check_output(command)
+            
+                return fileserver_pb2.CommandResponse(output = output, status=200)
+            else: 
+                return fileserver_pb2.CommandResponse(status=401)
+
+        except:
+            return fileserver_pb2.CommandResponse(status=500)
 
 
 @click.command()

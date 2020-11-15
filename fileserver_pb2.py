@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n\x10\x66ileserver.proto\x1a\x13keyDistServer.proto\"*\n\x0b\x41uthRequest\x12\x0f\n\x07message\x18\x01 \x01(\x0c\x12\n\n\x02id\x18\x02 \x01(\x05\"!\n\x0e\x43ommandRequest\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\"!\n\x0f\x43ommandResponse\x12\x0e\n\x06output\x18\x01 \x01(\x0c\x32\xc3\x01\n\nFileServer\x12;\n\x0c\x41uthenticate\x12\x0c.AuthRequest\x1a\x1b.keydistserver.AuthResponse\"\x00\x12\x44\n\x15\x41utheticationComplete\x12\x0c.AuthRequest\x1a\x1b.keydistserver.AuthResponse\"\x00\x12\x32\n\x0bTakeCommand\x12\x0f.CommandRequest\x1a\x10.CommandResponse\"\x00\x62\x06proto3'
+  serialized_pb=b'\n\x10\x66ileserver.proto\x1a\x13keyDistServer.proto\"*\n\x0b\x41uthRequest\x12\x0f\n\x07message\x18\x01 \x01(\x0c\x12\n\n\x02id\x18\x02 \x01(\x05\";\n\x0e\x43ommandRequest\x12\x0f\n\x07\x63ommand\x18\x01 \x01(\t\x12\x0c\n\x04\x64\x61ta\x18\x02 \x01(\t\x12\n\n\x02id\x18\x03 \x01(\x05\"1\n\x0f\x43ommandResponse\x12\x0e\n\x06output\x18\x01 \x01(\x0c\x12\x0e\n\x06status\x18\x02 \x01(\x05\x32\xc3\x01\n\nFileServer\x12;\n\x0c\x41uthenticate\x12\x0c.AuthRequest\x1a\x1b.keydistserver.AuthResponse\"\x00\x12\x44\n\x15\x41utheticationComplete\x12\x0c.AuthRequest\x1a\x1b.keydistserver.AuthResponse\"\x00\x12\x32\n\x0bTakeCommand\x12\x0f.CommandRequest\x1a\x10.CommandResponse\"\x00\x62\x06proto3'
   ,
   dependencies=[keyDistServer__pb2.DESCRIPTOR,])
 
@@ -81,6 +81,20 @@ _COMMANDREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='data', full_name='CommandRequest.data', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=b"".decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='id', full_name='CommandRequest.id', index=2,
+      number=3, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -94,7 +108,7 @@ _COMMANDREQUEST = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=85,
-  serialized_end=118,
+  serialized_end=144,
 )
 
 
@@ -113,6 +127,13 @@ _COMMANDRESPONSE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='status', full_name='CommandResponse.status', index=1,
+      number=2, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
   ],
   extensions=[
   ],
@@ -125,8 +146,8 @@ _COMMANDRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=120,
-  serialized_end=153,
+  serialized_start=146,
+  serialized_end=195,
 )
 
 DESCRIPTOR.message_types_by_name['AuthRequest'] = _AUTHREQUEST
@@ -164,8 +185,8 @@ _FILESERVER = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=156,
-  serialized_end=351,
+  serialized_start=198,
+  serialized_end=393,
   methods=[
   _descriptor.MethodDescriptor(
     name='Authenticate',

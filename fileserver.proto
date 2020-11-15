@@ -17,13 +17,16 @@ service FileServer {
 
 message AuthRequest {
     bytes message = 1; // Encrypted message
-    int32 id = 2;
+    int32 id = 2; 
 }
 
 message CommandRequest {
     string command = 1;
+    string data = 2;
+    int32 id = 3;
 }
 
 message CommandResponse {
     bytes output = 1;
+    int32 status = 2;
 }

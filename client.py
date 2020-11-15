@@ -75,7 +75,6 @@ def cli(client, fs):
             client.fs_stub = fileserver_pb2_grpc.FileServerStub(channel)
 
 
-
 @cli.command()
 @click.option('--port', help='Port of key distribution server')
 @pass_client
@@ -148,8 +147,14 @@ def connect(client, id):
 @pass_client
 def upload(client,file):
     ''' Upload a file to selected file server '''
-    with open() as f:
+    
+    with open(file, "r") as f:
         content = f.read()
+
+    print(content)
+    command = "upload "+file
+    command = fileserver_pb2.CommandRequest(command=command, data=content, id=client.myId)
+    output = client.fs_stub.TakeCommand(command)
 
 
 @cli.command()
@@ -157,9 +162,15 @@ def upload(client,file):
 def pwd(client):
     ''' Show current directory path '''
 
-    command = fileserver_pb2.CommandRequest(command="pwd")
-    output = client.fs_stub.TakeCommand(command).output
-    click.echo(output)
+    command = fileserver_pb2.CommandRequest(command="pwd", id=client.myId)
+    output  = client.fs_stub.TakeCommand(command)
+    if output.status == 200:
+        click.echo(output.output)
+    elif output.status == 400:
+        click.echo('Terminal not authorized')
+    else:
+        click.echo('File server error')
+
 
 
 @cli.command()
@@ -167,9 +178,15 @@ def pwd(client):
 def ls(client):
     ''' Show contents of directory '''
     
-    command = fileserver_pb2.CommandRequest(command="ls")
-    output = client.fs_stub.TakeCommand(command).output
-    click.echo(output)
+    command = fileserver_pb2.CommandRequest(command="ls", id=client.myId)
+    output = client.fs_stub.TakeCommand(command)
+    if output.status == 200:
+        click.echo(output.output)
+    elif output.status == 400:
+        click.echo('Terminal not authorized')
+    else:
+        click.echo('File server error')
+
 
 
 @cli.command()
@@ -178,9 +195,15 @@ def ls(client):
 def cat(client, file):
     ''' Show contents of file '''
     command = 'cat '+file 
-    command = fileserver_pb2.CommandRequest(command=command)
-    output = client.fs_stub.TakeCommand(command).output
-    click.echo(output)
+    command = fileserver_pb2.CommandRequest(command=command, id=client.myId)
+    output = client.fs_stub.TakeCommand(command)
+    
+    if output.status == 200:
+        click.echo(output.output)
+    elif output.status == 400:
+        click.echo('Terminal not authorized')
+    else:
+        click.echo('File server error')
 
 
 @cli.command()
@@ -190,15 +213,22 @@ def cat(client, file):
 def cp(client, file1, file2):
     ''' Copy one file to another '''
     command = 'cp {} {}'.format(file1, file2) 
-    command = fileserver_pb2.CommandRequest(command=command)
-    output = client.fs_stub.TakeCommand(command).output
-    click.echo(output)
+    command = fileserver_pb2.CommandRequest(command=command, id=client.myId)
+    output = client.fs_stub.TakeCommand(command)
+    
+    if output.status == 200:
+        click.echo(output.output)
+    elif output.status == 400:
+        click.echo('Terminal not authorized')
+    else:
+        click.echo('File server error')
+
 
 
 @cli.command()
 @pass_client
 def fileservers(client):
-    ''' Get information about all the connected file servers '''
+    ''' Get information about all th=e connected file servers '''
 
     infoReq = keyDistServer_pb2.InfoRequest()
     client.availableServers = JsonToDict(client.kdcStub.GetServerInfo(infoReq).file_servers)
