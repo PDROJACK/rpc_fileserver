@@ -45,8 +45,6 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
 
         idA = int(request.id)
 
-        # print('Deciphering encrypted transmission...')
-        # print(self.distMachines)
         decrypted = JsonToDict(decrypt(self.distMachines[idA] , request.message ))
         idB = int(decrypted[1])
         nonce = decrypted[2]
