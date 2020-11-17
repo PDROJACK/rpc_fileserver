@@ -35,18 +35,18 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
             self.totalDistMachines+=1
             creds = get_Creds(self.totalDistMachines)
             self.distMachines[self.totalDistMachines] = creds.key
-            print(self.distMachines)
+            # print(self.distMachines)
             return creds
 
     #TODO: Start Authentication from console to Kdc to server cycle
     def Authenticate(self, request, context):
 
-        print('Receiving encrypted transmission...')
+        print('Receiving authentication request from terminal {}...'.format(request.id))
 
         idA = int(request.id)
 
-        print('Deciphering encrypted transmission...')
-        print(self.distMachines)
+        # print('Deciphering encrypted transmission...')
+        # print(self.distMachines)
         decrypted = JsonToDict(decrypt(self.distMachines[idA] , request.message ))
         idB = int(decrypted[1])
         nonce = decrypted[2]
@@ -55,7 +55,7 @@ class KeyDistributionServicer(keyDistServer_pb2_grpc.ConnectServicer):
         ticket = encrypt( self.fileServers[idB][0] , dictToJSON([idA, ks]))
         message = encrypt( self.distMachines[idA] , dictToJSON([ks, idA, idB, nonce, ticket.decode('latin-1')]))
 
-        print('Sending new encrypted transmission back...')
+        print('Sending data back to terminal {}...'.format(request.id))
 
         return keyDistServer_pb2.AuthResponse(message = message)
     

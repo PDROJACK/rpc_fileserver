@@ -5,6 +5,7 @@ import grpc
 import pickle
 import os
 import subprocess
+import sys
 
 import keyDistServer_pb2
 import keyDistServer_pb2_grpc
@@ -36,6 +37,7 @@ class Client(object):
         self.myKey              = None
         self.myId               = None
         self.fs_stub            = None
+        self.fs                 = None
         self.availableServers   = {}
 
 
@@ -44,18 +46,28 @@ pass_client = click.make_pass_decorator(Client, ensure=True)
 
 @click.group()
 @click.option('--fs', type=int, help='select file server')
+# @click.option('--kport', type=int, help='KDS port')
 @pass_client
 def cli(client, fs):
 
+    # if kport:
+    #     connection_url = 'localhost:' + kport
+    #     channel        = grpc.insecure_channel(connection_url)
+    #     client.kdcStub = keyDistServer_pb2_grpc.ConnectStub(channel)
+
+    #     if not config.has_section('main'):
+    #         config.add_section('main')
+
+    #     config.set('main', 'host', 'localhost')
+    #     config.set('main', 'port', kport)
+
     if 'main' not in config.sections():
         config.add_section('main')
-
 
     if os.path.isfile('./config.ini') == False:
         pass
     else:
         config.read('config.ini')
-
         client.host               = config['main']['host']
         client.port               = config['main']['port']
         client.myKey              = config['main']['myKey']
@@ -71,8 +83,12 @@ def cli(client, fs):
         client.kdcStub = keyDistServer_pb2_grpc.ConnectStub(channel)
 
         if fs:
-            channel        = grpc.insecure_channel(client.availableServers[fs])
-            client.fs_stub = fileserver_pb2_grpc.FileServerStub(channel)
+            # print(client.availableServers)
+            if fs in client.availableServers:
+                channel        = grpc.insecure_channel(client.availableServers[fs])
+                client.fs_stub = fileserver_pb2_grpc.FileServerStub(channel) 
+            else:
+                sys.exit('Fileserver not connected')
 
 
 @cli.command()
@@ -98,43 +114,47 @@ def getKey(client, port):
     with open('config.ini', 'w') as configfile:    
         config.write(configfile)
 
-    print('Connected successfully...')
+    print('Got key from KDS successfully...')
 
 
 @cli.command()
 @click.option('--id', help='ID of fileserver')
 @pass_client
-def connect(client, id):
-    ''' Connects you with file server or Key distribution server '''
+def connect(client,id):
+    ''' Connects and authenticates with file server '''
+
+    if int(id) not in client.availableServers:
+        sys.exit('Fileserver not found')
 
     with alive_bar(3, spinner='dots_waves2', bar='blocks') as bar:
+    
+        console.print('Authentication in progress...', style='green')
+        
+        bar('PHASE I in progress ...')
 
-        console.print('Commencing PHASE I of authentication process...', style='green')
         nonce   = random.randrange(1000)
         idB     = id
         message = dictToJSON([client.myId, idB, nonce])
         message = encrypt(client.myKey, message)
         res     = client.kdcStub.Authenticate(keyDistServer_pb2.AuthRequestEncrypted(id=client.myId, message=message))
         
-        bar('PHASE I in progress ...')
 
-        ks, idA, idB, nonce, messageToB = JsonToDict(decrypt(client.myKey, res.message))
-
-        #print('Commencing PHASE II sending message to selected file server...')
-        #print(client.availableServers)
-        channel        = grpc.insecure_channel(client.availableServers[(idB)])
-        stub           = fileserver_pb2_grpc.FileServerStub(channel)
-
-        encryptedII    = stub.Authenticate(fileserver_pb2.AuthRequest(message=messageToB.encode('latin-1'))).message
-        nonceII        = int(decrypt(ks, encryptedII)) + 1
-
-        #bar('Commencing PHASE II sending nonce to selected file server...')
         bar('Phase II in progress...')
 
-        finalMessage = encrypt(ks, str(nonceII))
-        res = stub.AutheticationComplete(fileserver_pb2.AuthRequest(id=client.myId,message = finalMessage))
-        
+        ks, idA, idB, nonce, messageToB = JsonToDict(decrypt(client.myKey, res.message))
+        channel        = grpc.insecure_channel(client.availableServers[(idB)])
+        stub           = fileserver_pb2_grpc.FileServerStub(channel)
+        encryptedII    = stub.Authenticate(fileserver_pb2.AuthRequest(message=messageToB.encode('latin-1'))).message
+
         bar('Final phase in progress...')
+
+        nonceII        = int(decrypt(ks, encryptedII)) + 1
+        finalMessage = encrypt(ks, str(nonceII))
+        res = stub.AutheticationComplete(fileserver_pb2.AuthRequest(id=client.myId, message=finalMessage))
+        
+
+        # if config.has_section():
+        #     print()
 
         if res.status == 200:
             print('Authentication with file server {} completed successfully'.format(idB))
@@ -147,7 +167,6 @@ def connect(client, id):
 @pass_client
 def upload(client,file):
     ''' Upload a file to selected file server '''
-    
     with open(file, "r") as f:
         content = f.read()
 
@@ -180,6 +199,7 @@ def ls(client):
     
     command = fileserver_pb2.CommandRequest(command="ls", id=client.myId)
     output = client.fs_stub.TakeCommand(command)
+
     if output.status == 200:
         click.echo(output.output)
     elif output.status == 400:
@@ -198,12 +218,14 @@ def cat(client, file):
     command = fileserver_pb2.CommandRequest(command=command, id=client.myId)
     output = client.fs_stub.TakeCommand(command)
     
-    if output.status == 200:
-        click.echo(output.output)
-    elif output.status == 400:
-        click.echo('Terminal not authorized')
-    else:
-        click.echo('File server error')
+
+    click.echo(output.output)
+    # if output.status == 200:
+    #     click.echo(output.output)
+    # elif output.status == 400:
+    #     click.echo('Terminal not authorized')
+    # else:
+    #     click.echo('File server error')
 
 
 @cli.command()
