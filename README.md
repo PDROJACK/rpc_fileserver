@@ -17,7 +17,7 @@ python -m grpc_tools.protoc -I./ --python_out=. --grpc_python_out=. ./fileserver
 ```
 3. Now we can start the key distribution server, by default on port=51001:
 ```
-python connect_server.py
+python kds.py
 ```
 4. Install the client app using pip
 ```
